@@ -3,20 +3,36 @@ import Loading from '../../components/Loading';
 import { dummyBookingData } from '../../assets/assets';
 import Title from '../../components/admin/Title';
 import { dateFormat } from '../../lib/dateFormat';
+import { useAppContext } from '../../context/appContext';
 
 const ListBookings = () => {
   const currency = import.meta.env.VITE_CURRENCY
   const [bookings, setBookings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const {axios, getToken, user, image_base_url} = useAppContext();
+
   const getAllBookings = async () => {
-    setBookings(dummyBookingData)
+    try {
+      // setBookings(dummyBookingData)
+      const {data} = await axios.get('/api/admin/all-bookings', {headers : {Authorization :`Bearer ${await getToken()}`}})
+      if(data.success){
+        setBookings(data.bookings)
+      } 
+      else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error("Error fetching dashboard data",error)      
+    }
     setIsLoading(false);
   }
 
   useEffect(() => {
-    getAllBookings()
-  }, [])
+    if(user){
+      getAllBookings()
+    }
+  }, [user])
 
   return !isLoading ? (
     <>
