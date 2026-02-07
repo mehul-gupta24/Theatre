@@ -5,7 +5,7 @@ import MovieCard from '../../components/MovieCard';
 import { CheckIcon, DeleteIcon, StarIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { numToThousand } from '../../lib/numToThousand';
-import { useAppContext } from '../../context/appContext';
+import { useAppContext } from '../../context/AppContext';
 import toast from 'react-hot-toast';
 
 const AddShows = () => {

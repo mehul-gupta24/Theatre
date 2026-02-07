@@ -4,7 +4,7 @@ import BlurCircle from '../components/BlurCircle';
 import { dummyBookingData } from '../assets/assets';
 import timeFormat from '../lib/timeFormat';
 import { dateFormat } from '../lib/dateFormat';
-import { useAppContext } from '../context/appContext';
+import { useAppContext } from '../context/AppContext';
 import { Link } from 'react-router-dom';
 
 const MyBookings = () => {
