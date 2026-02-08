@@ -17,6 +17,9 @@ const MyBookings = () => {
   const getMyBookings = async()=>{
     // setBookings(dummyBookingData)
     try {
+      if(!user){
+        return toast.error("Please login to procees")
+      }
       const {data} = await axios.get('/api/user/bookings', {
         headers: {
           Authorization : `Bearer ${await getToken()}`
