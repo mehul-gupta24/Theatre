@@ -54,6 +54,11 @@ export const createBooking = async(req, res) => {
             cancel_url : `${origin}/my-bookings`,
             line_items: line_items,
             mode: 'payment',
+            payment_intent_data: {
+                metadata: {
+                bookingId: booking._id.toString(),
+                },
+            },
             metadata : {
                 bookingId: booking._id.toString()
             },
