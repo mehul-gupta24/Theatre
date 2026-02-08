@@ -17,14 +17,14 @@ export const stripeWebhooks = async (req, res) => {
     }
     try {
         switch (event.type) {
-            case "checkout.session.completed":{
-                const session = event.data.object;
-                const { bookingId } = session.metadata;
+            case "payment_intent.succeeded": {
+                const paymentIntent = event.data.object;
+                const { bookingId } = paymentIntent.metadata;
+
                 if (!bookingId) break;
 
-                // const booking = await Booking.findById(bookingId);
-                // if (!booking || booking.isPaid) break;
-
+                const booking = await Booking.findById(bookingId);
+                if (!booking || booking.isPaid) break;
 
                 await Booking.findByIdAndUpdate(bookingId, {
                     isPaid: true,
@@ -38,6 +38,7 @@ export const stripeWebhooks = async (req, res) => {
 
                 break;
             }
+
             default:
             console.log('Unhandled event type : ', event.type);
         }
