@@ -2,8 +2,9 @@ const isoTimeFormat = (dateTime) => {
     const date = new Date(dateTime)
     const localTime = date.toLocaleTimeString('en-US',{
         hour:'2-digit',
-        min:'2-digit',
-        hour12:'true',
+        minute:'2-digit',
+        hour12:true,
+        timeZone: 'Asia/Kolkata'  // Force IST timezone
     })
     return localTime;
 }
