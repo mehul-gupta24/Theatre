@@ -4,7 +4,6 @@ export const dateFormat = (date) => {
         month:'long',
         day:'numeric',
         hour:'numeric',
-        minute:'numeric',
-        timeZone: 'Asia/Kolkata'  // Force IST timezone
+        minute:'numeric'
     })
 }
