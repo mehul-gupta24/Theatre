@@ -28,6 +28,17 @@ app.use(express.json())
 app.use(cors())
 
 
+// In server.js, add this route:
+app.get('/api/health', async (req,res) => {
+    try {
+        await mongoose.connection.db.admin().ping()
+        res.json({success: true, message: 'Connected to MongoDB'})
+    } catch (err) {
+        res.json({success: false, message: err.message})
+    }
+})
+
+
 app.get('/',(req,res)=>{res.send("Server is Live!")})
 app.use('/api/inngest',serve({client : inngest, functions}))
 app.use('/api/show',showRouter)
