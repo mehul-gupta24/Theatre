@@ -1,14 +1,23 @@
 import stripe from 'stripe'
 import { inngest } from "../inngest/index.js";
 import Booking from '../models/bookings.js';
-const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY)
+
+// Lazy load Stripe instance
+let stripeInstance;
+
+const getStripeInstance = () => {
+    if (!stripeInstance) {
+        stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY)
+    }
+    return stripeInstance;
+}
 
 export const stripeWebhooks = async (req, res) => {
     const sig = req.headers["stripe-signature"]
 
     let event;
     try {
-        event = stripeInstance
+        event = getStripeInstance()
         .webhooks
         .constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET)
 
