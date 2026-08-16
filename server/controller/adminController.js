@@ -10,8 +10,8 @@ export const isAdmin = async(req, res) => {
 //API to get Dashboard data
 export const getDashboardData = async(req, res) => {
     try {
-        const bookings = await Booking.find({isPaid : true});
-        const activeShows = await Show.find({showDateTime : {$gte : new Date()}}).populate('movie');
+        const bookings = await Booking.find({isPaid : true}).lean().maxTimeMS(30000);
+        const activeShows = await Show.find({showDateTime : {$gte : new Date()}}).populate('movie').lean().maxTimeMS(30000);
         const totalUser = await User.countDocuments()
         let totalRevenue = 0;
         for (const booking of bookings) {
@@ -37,6 +37,8 @@ export const getAllShows = async(req, res) => {
         const shows = await Show.find({showDateTime : {$gte : new Date()} })
                                 .populate('movie')
                                 .sort({showDateTime : 1})
+                                .lean()
+                                .maxTimeMS(30000)
         res.json({success : true, shows})
     } catch (err) {
         console.log(err)
@@ -47,13 +49,28 @@ export const getAllShows = async(req, res) => {
 //API to get allBookings
 export const getAllBookings = async(req, res) => {
     try {
-        const bookings = await Booking.find({}).populate('user').populate({
-            path : "show",
-            populate : {path : 'movie'}
-        }).sort({ createdAt : -1})
-        res.json({success : true, bookings})
+        const page = parseInt(req.query.page) || 1;
+        const limit = 10;
+        const skip = (page - 1) * limit;
+        
+        const bookings = await Booking.find({})
+            .populate('user')
+            .populate({
+                path : "show",
+                populate : {path : 'movie'}
+            })
+            .sort({ createdAt : -1})
+            .skip(skip)
+            .limit(limit)
+            .lean()
+            .maxTimeMS(30000)
+        
+        const totalBookings = await Booking.countDocuments();
+        const totalPages = Math.ceil(totalBookings / limit);
+        
+        res.json({success : true, bookings, totalPages, currentPage: page, totalBookings})
     } catch (error) {
         console.log(error)
-        res.json({success : true, message : error.message})
+        res.json({success : false, message : error.message})
     }
 }
