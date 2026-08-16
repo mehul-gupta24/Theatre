@@ -11,10 +11,6 @@ const showSchema = new mongoose.Schema({
     }
 )
 
-// Add indexes for serverless performance
-showSchema.index({ showDateTime: 1 });
-showSchema.index({ movie: 1 });
-
 const Show = mongoose.model('Show', showSchema)
 
 export default Show

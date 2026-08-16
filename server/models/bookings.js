@@ -9,12 +9,6 @@ const bookingSchema = mongoose.Schema({
     paymentLink:{type : String},
 },{timestamps : true})
 
-// Add indexes for serverless performance
-bookingSchema.index({ isPaid: 1 });
-bookingSchema.index({ user: 1 });
-bookingSchema.index({ show: 1 });
-bookingSchema.index({ createdAt: -1 });
-
 const Booking = mongoose.model('Booking', bookingSchema)
 
 export default Booking;
